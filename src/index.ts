@@ -1,233 +1,185 @@
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import {
-  CallToolRequestSchema,
-  ErrorCode,
-  ListToolsRequestSchema,
-  McpError,
-} from "@modelcontextprotocol/sdk/types.js";
-import { Server } from "@modelcontextprotocol/sdk/server/index.js";
+import { z } from "zod";
 import { AESUtil, OutputFormat, PaddingMode } from "./service/aes.js";
-import test from "node:test";
-import { text } from "node:stream/consumers";
+import { ErrorCode, McpError } from "@modelcontextprotocol/sdk/types.js";
 
-// 定义响应类型
-interface FetchResponse {
-  ok: boolean;
-  text(): Promise<string>;
-}
 // Create an MCP server
-const server = new Server(
+const server = new McpServer({
+  name: "crypto-mcp",
+  version: "1.0.0",
+});
+
+// AES Encrypt
+server.tool(
+  "aes_encrypt",
+  "encrypt text with aes",
   {
-    name: "crypto-mcp",
-    version: "1.0.0",
+    content: z.string().describe("text to encrypt and decrypt"),
+    key: z
+      .string()
+      .optional()
+      .describe("encrypt key, default is your-key-0123456"),
+    padding: z
+      .enum([
+        "Pkcs7",
+        "Iso97971",
+        "AnsiX923",
+        "Iso10126",
+        "ZeroPadding",
+        "NoPadding",
+      ])
+      .optional()
+      .describe("padding mode, default is Pkcs7")
+      .default("Pkcs7"),
+    outputFormat: z
+      .enum(["base64", "hex"])
+      .optional()
+      .describe("output format, default is base64")
+      .default("base64"),
+    iv: z
+      .string()
+      .optional()
+      .describe("iv, default is your-iv-01234567")
+      .default("your-iv-01234567"),
+    mode: z.string().optional().describe("mode, default is ECB").default("ECB"),
   },
-  {
-    capabilities: {
-      resources: {},
-      tools: {},
-    },
+  async ({ content, key, padding, outputFormat, iv, mode }) => {
+    let result = "";
+    if (mode === "ECB") {
+      result = AESUtil.encryptECB(
+        content,
+        key ?? "your-key-0123456",
+        (padding ?? "Pkcs7") as PaddingMode,
+        (outputFormat ?? "base64") as OutputFormat
+      );
+    } else if (mode === "CBC") {
+      result = AESUtil.encryptCBC(
+        content,
+        key ?? "your-key-0123456",
+        iv ?? "your-iv-01234567",
+        (padding ?? "Pkcs7") as PaddingMode,
+        (outputFormat ?? "base64") as OutputFormat
+      );
+    } else if (mode === "CFB") {
+      result = AESUtil.encryptCFB(
+        content,
+        key ?? "your-key-0123456",
+        iv ?? "your-iv-01234567",
+        (padding ?? "Pkcs7") as PaddingMode,
+        (outputFormat ?? "base64") as OutputFormat
+      );
+    } else if (mode === "OFB") {
+      result = AESUtil.encryptOFB(
+        content,
+        key ?? "your-key-0123456",
+        iv ?? "your-iv-01234567",
+        (padding ?? "Pkcs7") as PaddingMode,
+        (outputFormat ?? "base64") as OutputFormat
+      );
+    } else if (mode === "CTR") {
+      result = AESUtil.encryptCTR(
+        content,
+        key ?? "your-key-0123456",
+        iv ?? "your-iv-01234567",
+        (padding ?? "Pkcs7") as PaddingMode,
+        (outputFormat ?? "base64") as OutputFormat
+      );
+    } else {
+      throw new McpError(ErrorCode.InvalidParams, "Unknown mode");
+    }
+    return {
+      content: [
+        {
+          type: "text",
+          text: result,
+        },
+      ],
+    };
   }
 );
 
-/**
- * Handler that lists available tools.
- * Exposes a single "ProxyNodes" tool that waits for a specified duration.
- */
-server.setRequestHandler(ListToolsRequestSchema, async () => {
-  return {
-    tools: [
-      {
-        name: "aes_encrypt",
-        description: "encrypt text with aes",
-        inputSchema: {
-          type: "object",
-          properties: {
-            content: {
-              type: "string",
-              description: "text to encrypt and decrypt",
-            },
-            key: {
-              type: "string",
-              description: "key",
-            },
-            padding: {
-              type: "string",
-              description: "padding mode",
-              enum: [
-                "Pkcs7",
-                "Iso97971",
-                "AnsiX923",
-                "Iso10126",
-                "ZeroPadding",
-                "NoPadding",
-              ],
-            },
-            outputFormat: {
-              type: "string",
-              description: "output format",
-              enum: ["base64", "hex"],
-            },
-            iv: {
-              type: "string",
-              description: "iv",
-            },
-            mode: {
-              type: "string",
-              description: "mode",
-              enum: ["ECB", "CBC", "CFB", "OFB", "CTR"],
-            },
-          },
-          required: ["content", "key", "padding", "outputFormat", "iv", "mode"],
+// AES Decrypt
+server.tool(
+  "aes_decrypt",
+  "decrypt text with aes",
+  {
+    content: z.string().describe("text to encrypt and decrypt"),
+    key: z
+      .string()
+      .optional()
+      .describe("decrypt key, default is your-key-0123456"),
+    padding: z
+      .enum([
+        "Pkcs7",
+        "Iso97971",
+        "AnsiX923",
+        "Iso10126",
+        "ZeroPadding",
+        "NoPadding",
+      ])
+      .optional()
+      .describe("padding mode, default is Pkcs7")
+      .default("Pkcs7"),
+    inputFormat: z
+      .enum(["base64", "hex"])
+      .optional()
+      .describe("input format, default is base64")
+      .default("base64"),
+    iv: z.string().optional().describe("iv, default is your-iv-01234567"),
+    mode: z
+      .enum(["ECB", "CBC", "CFB", "OFB", "CTR"])
+      .optional()
+      .describe("mode, default is ECB")
+      .default("ECB"),
+  },
+  async ({ content, key, padding, inputFormat, iv, mode }) => {
+    let result = "";
+    if (mode === "ECB") {
+      result = AESUtil.decryptECB(content, key ?? "your-key-0123456");
+    } else if (mode === "CBC") {
+      result = AESUtil.decryptCBC(
+        content,
+        key ?? "your-key-0123456",
+        iv ?? "your-iv-01234567",
+        (padding ?? "Pkcs7") as PaddingMode,
+        (inputFormat ?? "base64") as OutputFormat
+      );
+    } else if (mode === "CFB") {
+      result = AESUtil.decryptCFB(
+        content,
+        key ?? "your-key-0123456",
+        iv ?? "your-iv-01234567",
+        (padding ?? "Pkcs7") as PaddingMode,
+        (inputFormat ?? "base64") as OutputFormat
+      );
+    } else if (mode === "OFB") {
+      result = AESUtil.decryptOFB(
+        content,
+        key ?? "your-key-0123456",
+        iv ?? "your-iv-01234567",
+        (padding ?? "Pkcs7") as PaddingMode,
+        (inputFormat ?? "base64") as OutputFormat
+      );
+    } else if (mode === "CTR") {
+      result = AESUtil.decryptCTR(
+        content,
+        key ?? "your-key-0123456",
+        iv ?? "your-iv-01234567",
+        (padding ?? "Pkcs7") as PaddingMode,
+        (inputFormat ?? "base64") as OutputFormat
+      );
+    }
+    return {
+      content: [
+        {
+          type: "text",
+          text: result,
         },
-      },
-      {
-        name: "aes_decrypt",
-        description: "decrypt text with aes",
-        inputSchema: {
-          type: "object",
-          properties: {
-            content: {
-              type: "string",
-              description: "text to encrypt and decrypt",
-            },
-            mode: {
-              type: "string",
-              description: "mode",
-              enum: ["ECB", "CBC", "CFB", "OFB", "CTR"],
-            },
-            padding: {
-              type: "string",
-              description: "padding mode",
-              enum: [
-                "Pkcs7",
-                "Iso97971",
-                "AnsiX923",
-                "Iso10126",
-                "ZeroPadding",
-                "NoPadding",
-              ],
-            },
-            inputFormat: {
-              type: "string",
-              description: "output format",
-              enum: ["base64", "hex"],
-            },
-            iv: {
-              type: "string",
-              description: "iv",
-            },
-          },
-          required: ["content", "key", "padding", "inputFormat", "iv", "mode"],
-        },
-      },
-    ],
-  };
-});
-
-/**
- * Handler for the crypto tool.
- * Waits for the specified duration and returns a success message.
- */
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
-  switch (request.params.name) {
-    case "aes_encrypt":
-      return aesEncrypt(request);
-    case "aes_decrypt":
-      return aesDecrypt(request);
-    default:
-      throw new McpError(ErrorCode.MethodNotFound, "Unknown tool");
+      ],
+    };
   }
-  // try {
-  //   const content = (request.params.arguments?.content ?? '') as string ;
-  //   const key = (request.params.arguments?.key ?? '') as string;
-  //   const mode = (request.params.arguments?.mode ?? '') as string;
-  //   const padding = (request.params.arguments?.padding ?? '') as string;
-  //   const format = (request.params.arguments?.format ?? '') as string;
-  //   const iv = (request.params.arguments?.iv ?? '') as string;
-
-  //   // const qrcode = await generateQRCode(text, {
-  //   //   width: size,
-  //   //   color: {
-  //   //     dark: darkColor,
-  //   //     light: lightColor,
-  //   //   },
-  //   //   errorCorrectionLevel,
-  //   //   margin,
-  //   // });
-
-  //   // const base64Image = qrcode.split(",")[1];
-
-  //   return {
-  //     content: [
-  //       // {
-  //       //   type: "image",
-  //       //   data: base64Image,
-  //       //   mimeType: "image/png",
-  //       // },
-  //       // {
-  //       //   type: "text",
-  //       //   text: "original qrcode: \n" + qrcode,
-  //       // },
-  //     ],
-  //   };
-  // } catch (error) {
-  //   // throw new McpError(
-  //   //   ErrorCode.InvalidParams,
-  //   //   error instanceof Error ? error.message : "Unknown error"
-  //   // );
-  //   return {
-  //     content: [
-  //       {
-  //         type: "text",
-  //         data: "Unknown error: " + JSON.stringify(error),
-  //       },
-  //     ],
-  //   };
-  // }
-});
-function aesEncrypt(request: any) {
-  const content = (request.params.arguments?.content ?? "") as string;
-  const mode = (request.params.arguments?.mode ?? "ECB") as string;
-  const key = (request.params.arguments?.key ?? "your-key-0123456") as string;
-  const padding = (request.params.arguments?.padding ?? "Pkcs7") as string;
-  const format = (request.params.arguments?.outputFormat ?? "base64") as string;
-  const iv = (request.params.arguments?.iv ?? "your-iv-01234567") as string;
-  let result = "";
-  if (mode === "ECB") {
-    result = AESUtil.encryptECB(
-      content,
-      key,
-      padding as PaddingMode,
-      format as OutputFormat
-    );
-  }
-  return {
-    content: [
-      {
-        type: "text",
-        text: result,
-      },
-    ],
-  };
-}
-
-async function aesDecrypt(request: any) {
-  const content = (request.params.arguments?.content ?? "") as string;
-  const mode = (request.params.arguments?.mode ?? "") as string;
-  const key = (request.params.arguments?.key ?? "") as string;
-  const padding = (request.params.arguments?.padding ?? "") as string;
-  const format = (request.params.arguments?.inputFormat ?? "") as string;
-  const iv = (request.params.arguments?.iv ?? "") as string;
-
-  return {
-    content: [
-      {
-        type: "text",
-        text: "test",
-      },
-    ],
-  };
-}
+);
 
 /**
  * Start the server using stdio transport.
@@ -235,9 +187,10 @@ async function aesDecrypt(request: any) {
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error("ProxyNodes MCP server running on stdio");
+  console.error("Crypto MCP Server running on stdio");
 }
 
 main().catch((error) => {
-  console.error("Server error:", error);
+  console.error("Fatal error in main():", error);
+  process.exit(1);
 });

@@ -144,14 +144,14 @@
 
 //   describe("Error Handling", () => {
 //     it("should throw error with invalid key length", () => {
-//       const invalidKey = "123"; // 太短的密钥
+//       const invalidKey = "123"; // Key too short
 //       expect(() => {
 //         AESUtil.encryptECB(testMessage, invalidKey);
 //       }).toThrow();
 //     });
 
 //     it("should throw error with invalid IV length", () => {
-//       const invalidIv = "123"; // 太短的IV
+//       const invalidIv = "123"; // IV too short
 //       expect(() => {
 //         AESUtil.encryptCBC(testMessage, testKey, invalidIv);
 //       }).toThrow();

@@ -11,12 +11,12 @@ export type OutputFormat = "base64" | "hex";
 
 export class AESUtil {
   /**
-   * ECB 模式加密
-   * @param message 待加密的消息
-   * @param key 密钥
-   * @param padding 填充模式
-   * @param outputFormat 输出格式
-   * @returns 加密后的字符串
+   * Encrypt in ECB mode
+   * @param message Message to encrypt
+   * @param key Encryption key
+   * @param padding Padding mode
+   * @param outputFormat Output format
+   * @returns Encrypted string
    */
   static encryptECB(
     message: string,
@@ -36,12 +36,12 @@ export class AESUtil {
   }
 
   /**
-   * ECB 模式解密
-   * @param ciphertext 密文
-   * @param key 密钥
-   * @param padding 填充模式
-   * @param inputFormat 输入格式
-   * @returns 解密后的字符串
+   * Decrypt in ECB mode
+   * @param ciphertext Ciphertext to decrypt
+   * @param key Decryption key
+   * @param padding Padding mode
+   * @param inputFormat Input format
+   * @returns Decrypted string
    */
   static decryptECB(
     ciphertext: string,
@@ -72,13 +72,13 @@ export class AESUtil {
   }
 
   /**
-   * CBC 模式加密
-   * @param message 待加密的消息
-   * @param key 密钥
-   * @param iv 初始向量
-   * @param padding 填充模式
-   * @param outputFormat 输出格式
-   * @returns 加密后的字符串
+   * Encrypt in CBC mode
+   * @param message Message to encrypt
+   * @param key Encryption key
+   * @param iv Initialization vector
+   * @param padding Padding mode
+   * @param outputFormat Output format
+   * @returns Encrypted string
    */
   static encryptCBC(
     message: string,
@@ -101,13 +101,13 @@ export class AESUtil {
   }
 
   /**
-   * CBC 模式解密
-   * @param ciphertext 密文
-   * @param key 密钥
-   * @param iv 初始向量
-   * @param padding 填充模式
-   * @param inputFormat 输入格式
-   * @returns 解密后的字符串
+   * Decrypt in CBC mode
+   * @param ciphertext Ciphertext to decrypt
+   * @param key Decryption key
+   * @param iv Initialization vector
+   * @param padding Padding mode
+   * @param inputFormat Input format
+   * @returns Decrypted string
    */
   static decryptCBC(
     ciphertext: string,
@@ -142,13 +142,13 @@ export class AESUtil {
   }
 
   /**
-   * CFB 模式加密
-   * @param message 待加密的消息
-   * @param key 密钥
-   * @param iv 初始向量
-   * @param padding 填充模式
-   * @param outputFormat 输出格式
-   * @returns 加密后的字符串
+   * Encrypt in CFB mode
+   * @param message Message to encrypt
+   * @param key Encryption key
+   * @param iv Initialization vector
+   * @param padding Padding mode
+   * @param outputFormat Output format
+   * @returns Encrypted string
    */
   static encryptCFB(
     message: string,
@@ -171,13 +171,13 @@ export class AESUtil {
   }
 
   /**
-   * CFB 模式解密
-   * @param ciphertext 密文
-   * @param key 密钥
-   * @param iv 初始向量
-   * @param padding 填充模式
-   * @param inputFormat 输入格式
-   * @returns 解密后的字符串
+   * Decrypt in CFB mode
+   * @param ciphertext Ciphertext to decrypt
+   * @param key Decryption key
+   * @param iv Initialization vector
+   * @param padding Padding mode
+   * @param inputFormat Input format
+   * @returns Decrypted string
    */
   static decryptCFB(
     ciphertext: string,
@@ -212,13 +212,13 @@ export class AESUtil {
   }
 
   /**
-   * OFB 模式加密
-   * @param message 待加密的消息
-   * @param key 密钥
-   * @param iv 初始向量
-   * @param padding 填充模式
-   * @param outputFormat 输出格式
-   * @returns 加密后的字符串
+   * Encrypt in OFB mode
+   * @param message Message to encrypt
+   * @param key Encryption key
+   * @param iv Initialization vector
+   * @param padding Padding mode
+   * @param outputFormat Output format
+   * @returns Encrypted string
    */
   static encryptOFB(
     message: string,
@@ -241,13 +241,13 @@ export class AESUtil {
   }
 
   /**
-   * OFB 模式解密
-   * @param ciphertext 密文
-   * @param key 密钥
-   * @param iv 初始向量
-   * @param padding 填充模式
-   * @param inputFormat 输入格式
-   * @returns 解密后的字符串
+   * Decrypt in OFB mode
+   * @param ciphertext Ciphertext to decrypt
+   * @param key Decryption key
+   * @param iv Initialization vector
+   * @param padding Padding mode
+   * @param inputFormat Input format
+   * @returns Decrypted string
    */
   static decryptOFB(
     ciphertext: string,
@@ -282,13 +282,13 @@ export class AESUtil {
   }
 
   /**
-   * CTR 模式加密
-   * @param message 待加密的消息
-   * @param key 密钥
-   * @param iv 初始向量/计数器
-   * @param padding 填充模式
-   * @param outputFormat 输出格式
-   * @returns 加密后的字符串
+   * Encrypt in CTR mode
+   * @param message Message to encrypt
+   * @param key Encryption key
+   * @param iv Initialization vector/counter
+   * @param padding Padding mode
+   * @param outputFormat Output format
+   * @returns Encrypted string
    */
   static encryptCTR(
     message: string,
@@ -311,13 +311,13 @@ export class AESUtil {
   }
 
   /**
-   * CTR 模式解密
-   * @param ciphertext 密文
-   * @param key 密钥
-   * @param iv 初始向量/计数器
-   * @param padding 填充模式
-   * @param inputFormat 输入格式
-   * @returns 解密后的字符串
+   * Decrypt in CTR mode
+   * @param ciphertext Ciphertext to decrypt
+   * @param key Decryption key
+   * @param iv Initialization vector/counter
+   * @param padding Padding mode
+   * @param inputFormat Input format
+   * @returns Decrypted string
    */
   static decryptCTR(
     ciphertext: string,
