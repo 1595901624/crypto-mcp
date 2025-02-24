@@ -1,8 +1,7 @@
 {
   "name": "crypto-mcp",
   "version": "1.0.0",
-  "description": "Allow you to get latest proxy nodes",
-  "private": true,
+  "description": "A Model Context Protocol (MCP) server for encrypting/decrypting/algorithm/hash",
   "type": "module",
   "bin": {
     "crypto-mcp": "./build/index.js"
@@ -19,8 +18,8 @@
     "test:coverage": "jest --coverage"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "cloris",
+  "license": "MIT",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.6.0",
     "@types/crypto-js": "^4.2.2",
