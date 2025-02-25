@@ -7,6 +7,7 @@
     <p>
         <img src="https://img.shields.io/badge/version-1.0.1-blue.svg" alt="Version">
         <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License">
+<a href="https://smithery.ai/server/@1595901624/crypto-mcp"><img alt="Smithery Badge" src="https://smithery.ai/badge/@1595901624/crypto-mcp"></a>
     </p>
 </div>
 
@@ -30,6 +31,15 @@ A Model Context Protocol (MCP) server for encrypting and decrypting text with AE
 
 ## 📦 Installation
 
+### Installing via Smithery
+
+To install Crypto_MCP for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@1595901624/crypto-mcp):
+
+```bash
+npx -y @smithery/cli install @1595901624/crypto-mcp --client claude
+```
+
+### Manual Installation
 1. Clone the Repository
 
 ```
