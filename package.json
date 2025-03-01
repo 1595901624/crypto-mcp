@@ -1,6 +1,6 @@
 {
   "name": "crypto-mcp",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "A Model Context Protocol (MCP) server for encrypting/decrypting/algorithm/hash",
   "type": "module",
   "bin": {

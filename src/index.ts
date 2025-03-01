@@ -2,6 +2,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { registerAESTool } from "./service/aes.js";
 import { registerDigestTool } from "./service/digest.js";
+import { registerDESTool } from "./service/des.js";
 // Create an MCP server
 const server = new McpServer({
   name: "crypto-mcp",
@@ -11,6 +12,7 @@ const server = new McpServer({
 // Register tools
 registerAESTool(server);
 registerDigestTool(server);
+registerDESTool(server);
 /*
  * Start the server using stdio transport.
  */
