@@ -5,7 +5,7 @@
         <strong>A Model Context Protocol (MCP) server for encrypting/decrypting/algorithm/hash</strong>
     </p>
     <p>
-        <img src="https://img.shields.io/badge/version-1.0.2-blue.svg" alt="Version">
+        <img src="https://img.shields.io/badge/version-1.0.3-blue.svg" alt="Version">
         <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License">
 <a href="https://smithery.ai/server/@1595901624/crypto-mcp"><img alt="Smithery Badge" src="https://smithery.ai/badge/@1595901624/crypto-mcp"></a>
     </p>
@@ -30,8 +30,8 @@ A Model Context Protocol (MCP) server for encrypting/decrypting/algorithm/hash.
 - [x] Support DES encryption and decryption (64 bits)
   - Support mode: ECB, CBC, CFB, OFB, CTR
   - Support padding mode: Pkcs7, Iso97971, AnsiX923, Iso10126, ZeroPadding, NoPadding.
-  - Support output format: base64, hex
-  - Support input format: base64, hex
+- [x] Support Base64 encode and decode
+- [x] Support Hex encode and decode
 
 ## 🔮 Comming Soon
 
@@ -162,6 +162,31 @@ pnpm run build
   - `iv`: The initialization vector (optional, default is your-iv-)
   - `mode`: The mode to decrypt the text (optional, default is ECB)
 
+#### Base64
+
+- `base64_encode`: Encode text to base64
+  parameters:
+
+  - `content`: The text to encode (**Required**)
+
+- `base64_decode`: Decode base64 to text
+  parameters:
+
+  - `content`: The base64 text to decode (**Required**)
+
+#### Hex
+
+- `hex_encode`: Encode text to hex
+  parameters:
+
+  - `content`: The text to encode (**Required**)
+
+- `hex_decode`: Decode hex to text
+  parameters:
+
+  - `content`: The hex text to decode (**Required**)
+
+  
 ## 📝 Development
 
 ```
