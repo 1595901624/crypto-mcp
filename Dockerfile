@@ -18,5 +18,10 @@ RUN npm run build
 
 # Expose necessary port if needed. Here MCP uses stdio so not needed
 
+# Add a non-root user and switch to it
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+RUN chown -R appuser:appgroup /usr/src/app
+USER appuser
+
 # Command to run the MCP server
 CMD [ "node", "build/index.js" ]
