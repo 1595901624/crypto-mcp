@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/1595901624-crypto-mcp-badge.png)](https://mseep.ai/app/1595901624-crypto-mcp)
+
 <div align="center">
     <img src="logo/icon_crypto.png" alt="Crypto_MCP Logo" width="80">
     <h1>Crypto_MCP</h1>
